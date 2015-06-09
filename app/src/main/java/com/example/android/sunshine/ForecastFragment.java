@@ -55,7 +55,7 @@ public class ForecastFragment extends Fragment {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
+        Log.v("cflanagan debug", "FRAGMENT onOptionsItemSelected");
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_refresh) {
             FetchWeatherTask weatherTask = new FetchWeatherTask();
@@ -99,8 +99,6 @@ public class ForecastFragment extends Fragment {
     }
 
     public class FetchWeatherTask extends AsyncTask<String, Void, Void> {
-
-
 
         private final String LOG_TAG = FetchWeatherTask.class.getSimpleName();
 
