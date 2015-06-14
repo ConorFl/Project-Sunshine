@@ -208,9 +208,7 @@ public class ForecastFragment extends Fragment {
         protected void onPostExecute(String[] strings) {
             if (strings != null) {
                 forecastAdapter.clear();
-                for (String dayForecastStr : strings) {
-                    forecastAdapter.add(dayForecastStr);
-                }
+                forecastAdapter.addAll(strings);
             }
         }
 
