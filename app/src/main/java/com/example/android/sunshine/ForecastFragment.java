@@ -1,5 +1,6 @@
 package com.example.android.sunshine;
 
+import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
@@ -12,8 +13,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 
 import org.json.JSONArray;
@@ -90,16 +94,28 @@ public class ForecastFragment extends Fragment {
         List<String> weekForecast = new ArrayList<String>(Arrays.asList(forecastArray));
 
         forecastAdapter = new ArrayAdapter<String>(
-                getActivity(), // current context (this activity)
+                getActivity(), // current context (this fragment's parent activity)
                 R.layout.list_item_forecast,  // name of the layout id
-                R.id.list_item_forecast_textview, // id of the textview to populate
-                weekForecast
+                R.id.list_item_forecast_textview, // id of the textview to populate within the above layout
+                weekForecast // forecast data
         );
 
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
         ListView listView = (ListView) rootView.findViewById(R.id.listview_forecast);
         listView.setAdapter(forecastAdapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                CharSequence toastContent = forecastAdapter.getItem(position);
+                Context context = parent.getContext();
+                int duration = Toast.LENGTH_SHORT;
+                Toast.makeText(context, toastContent, duration).show();
+                Log.e("DEBUGGER", Integer.toString(position));
+                Log.e("DEBUGGER", view.getClass().toString());
+                Log.e("DEBUGGER", Long.toString(id));
+            }
+        });
 
         FetchWeatherTask weatherTask = new FetchWeatherTask();
         weatherTask.execute("94043");
