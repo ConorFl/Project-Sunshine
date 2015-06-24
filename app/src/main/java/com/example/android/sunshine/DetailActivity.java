@@ -36,18 +36,13 @@ public class DetailActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Intent incomingIntent = getIntent();
 
         Bundle bundle = new Bundle();
-        bundle.putString(FORECAST, incomingIntent.getStringExtra(Intent.EXTRA_TEXT));
-
-        DetailsFragment detailsFrag = new DetailsFragment();
-        detailsFrag.setArguments(bundle);
 
         setContentView(R.layout.activity_detail);
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, detailsFrag)
+                    .add(R.id.container, new DetailsFragment())
                     .commit();
         }
     }
@@ -88,10 +83,13 @@ public class DetailActivity extends ActionBarActivity {
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
 
-            String forecast = getArguments().getString(FORECAST);
+            Intent incomingIntent = getActivity().getIntent();
 
-            TextView textView = (TextView) rootView.findViewById(R.id.detail_text);
-            textView.setText(forecast);
+            if (incomingIntent != null && incomingIntent.hasExtra(Intent.EXTRA_TEXT)) {
+                String forecast = incomingIntent.getStringExtra(FORECAST);
+                TextView textView = (TextView) rootView.findViewById(R.id.detail_text);
+                textView.setText(forecast);
+            }
 
             return rootView;
         }
