@@ -16,24 +16,38 @@
 
 package com.example.android.sunshine;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 public class DetailActivity extends ActionBarActivity {
+
+    public static final String FORECAST = "forecast";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Intent incomingIntent = getIntent();
+
+        Bundle bundle = new Bundle();
+        bundle.putString(FORECAST, incomingIntent.getStringExtra(Intent.EXTRA_TEXT));
+
+        DetailsFragment detailsFrag = new DetailsFragment();
+        detailsFrag.setArguments(bundle);
+
         setContentView(R.layout.activity_detail);
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new PlaceholderFragment())
+                    .add(R.id.container, detailsFrag)
                     .commit();
         }
     }
@@ -64,16 +78,21 @@ public class DetailActivity extends ActionBarActivity {
     /**
      * A placeholder fragment containing a simple view.
      */
-    public static class PlaceholderFragment extends Fragment {
+    public static class DetailsFragment extends Fragment {
 
-        public PlaceholderFragment() {
+        public DetailsFragment() {
         }
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-
             View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
+
+            String forecast = getArguments().getString(FORECAST);
+
+            TextView textView = (TextView) rootView.findViewById(R.id.detail_text);
+            textView.setText(forecast);
+
             return rootView;
         }
     }
