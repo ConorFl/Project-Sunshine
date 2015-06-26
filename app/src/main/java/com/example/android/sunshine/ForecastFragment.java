@@ -2,8 +2,10 @@ package com.example.android.sunshine;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.text.format.Time;
@@ -68,8 +70,11 @@ public class ForecastFragment extends Fragment {
         int id = item.getItemId();
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_refresh) {
+            SharedPreferences sharedPreferences = getActivity().getSharedPreferences("pref_general", Context.MODE_PRIVATE);
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            String location = prefs.getString(getString(R.string.pref_location_key), getString(R.string.pref_location_default));
             FetchWeatherTask weatherTask = new FetchWeatherTask();
-            weatherTask.execute("94043");
+            weatherTask.execute(location);
             return true;
         }
 
@@ -115,8 +120,11 @@ public class ForecastFragment extends Fragment {
             }
         });
 
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("pref_general", Context.MODE_PRIVATE);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String location = prefs.getString(getString(R.string.pref_location_key), getString(R.string.pref_location_default));
         FetchWeatherTask weatherTask = new FetchWeatherTask();
-        weatherTask.execute("94043");
+        weatherTask.execute(location);
 
         return rootView;
 
