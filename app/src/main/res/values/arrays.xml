@@ -3,8 +3,8 @@
 <resources>
 
     <string-array name="unitsKeys">
-        <item>Imperial (F)</item>
-        <item>Metric (C)</item>
+        <item>@string/pref_units_label_imperial</item>
+        <item>@string/pref_units_label_metric</item>
     </string-array>
 
     <string-array name="unitsValues">
