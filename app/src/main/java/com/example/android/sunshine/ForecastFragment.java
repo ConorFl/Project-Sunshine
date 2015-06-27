@@ -141,9 +141,7 @@ public class ForecastFragment extends Fragment {
 
             String format = "json";
 
-            SharedPreferences sharedPreferences = getActivity().getSharedPreferences("pref_general", Context.MODE_PRIVATE);
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-            String units = prefs.getString(getString(R.string.pref_units_key), getString(R.string.pref_units_default));
+            String units = getString(R.string.pref_units_value_metric);
 
             int numDays = 7;
 
@@ -247,6 +245,16 @@ public class ForecastFragment extends Fragment {
          */
         private String formatHighLows(double high, double low) {
             // For presentation, assume the user doesn't care about tenths of a degree.
+
+            SharedPreferences sharedPreferences = getActivity().getSharedPreferences("pref_general", Context.MODE_PRIVATE);
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            String units = prefs.getString(getString(R.string.pref_units_key), getString(R.string.pref_units_value_metric));
+
+            if (units.equals(getString(R.string.pref_units_value_imperial))) {
+                high = high * 1.8 + 32;
+                low = low * 1.8 + 32;
+            }
+
             long roundedHigh = Math.round(high);
             long roundedLow = Math.round(low);
 
