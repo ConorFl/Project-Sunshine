@@ -62,6 +62,14 @@ public class ForecastFragment extends Fragment {
         inflater.inflate(R.menu.forecast_fragment, menu);
     }
 
+    private void updateWeather() {
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("pref_general", Context.MODE_PRIVATE);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String location = prefs.getString(getString(R.string.pref_location_key), getString(R.string.pref_location_default));
+        FetchWeatherTask weatherTask = new FetchWeatherTask();
+        weatherTask.execute(location);
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -70,11 +78,7 @@ public class ForecastFragment extends Fragment {
         int id = item.getItemId();
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_refresh) {
-            SharedPreferences sharedPreferences = getActivity().getSharedPreferences("pref_general", Context.MODE_PRIVATE);
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-            String location = prefs.getString(getString(R.string.pref_location_key), getString(R.string.pref_location_default));
-            FetchWeatherTask weatherTask = new FetchWeatherTask();
-            weatherTask.execute(location);
+            updateWeather();
             return true;
         }
 
@@ -120,11 +124,7 @@ public class ForecastFragment extends Fragment {
             }
         });
 
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("pref_general", Context.MODE_PRIVATE);
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        String location = prefs.getString(getString(R.string.pref_location_key), getString(R.string.pref_location_default));
-        FetchWeatherTask weatherTask = new FetchWeatherTask();
-        weatherTask.execute(location);
+        updateWeather();
 
         return rootView;
 
