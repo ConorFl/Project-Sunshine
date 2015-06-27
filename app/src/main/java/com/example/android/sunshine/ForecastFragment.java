@@ -71,6 +71,12 @@ public class ForecastFragment extends Fragment {
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        updateWeather();
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
@@ -91,23 +97,11 @@ public class ForecastFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-
-        String[] forecastArray = {
-                "Today - Sunny - 88/60",
-                "Tomorrow - Cloudy - 65/62",
-                "Weds - Sunny - 90/80",
-                "Thurs - Snow - 40/30",
-                "Fri - Snow - 30/20",
-                "Sat - Sunny - 75/60"
-        };
-
-        List<String> weekForecast = new ArrayList<String>(Arrays.asList(forecastArray));
-
         forecastAdapter = new ArrayAdapter<String>(
                 getActivity(), // current context (this fragment's parent activity)
                 R.layout.list_item_forecast,  // name of the layout id
                 R.id.list_item_forecast_textview, // id of the textview to populate within the above layout
-                weekForecast // forecast data
+                new ArrayList<String>() // forecast data
         );
 
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
