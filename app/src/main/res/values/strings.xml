@@ -9,4 +9,6 @@
     <string name="pref_location_label">Location</string>
     <string name="pref_location_key">location</string>
     <string name="pref_location_default">94110</string>
+    <string name="pref_units_key">units</string>
+    <string name="pref_units_default">imperial</string>
 </resources>
