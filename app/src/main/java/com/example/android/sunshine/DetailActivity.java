@@ -71,15 +71,6 @@ public class DetailActivity extends ActionBarActivity {
             Intent settingsIntent = new Intent(this, SettingsActivity.class);
             startActivity(settingsIntent);
             return true;
-        } else if (id == R.id.action_show_loaction) {
-            SharedPreferences sharedPreferences = getSharedPreferences("pref_general", Context.MODE_PRIVATE);
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-            String location = prefs.getString(getString(R.string.pref_location_key), getString(R.string.pref_location_default));
-            Uri locationUri = Uri.parse("geo:0,0?q=" + location);
-
-            Intent showLocationIntent = new Intent(Intent.ACTION_VIEW);
-            showLocationIntent.setData(locationUri);
-            startActivity(showLocationIntent);
         }
         return super.onOptionsItemSelected(item);
     }

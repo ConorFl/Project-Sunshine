@@ -7,11 +7,14 @@ import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 
 public class MainActivity extends ActionBarActivity {
+
+    private final String LOG_TAG = MainActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,17 +48,30 @@ public class MainActivity extends ActionBarActivity {
             Intent settingsIntent = new Intent(this, SettingsActivity.class);
             startActivity(settingsIntent);
             return true;
-        } else if (id == R.id.action_show_loaction) {
-            SharedPreferences sharedPreferences = getSharedPreferences("pref_general", Context.MODE_PRIVATE);
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-            String location = prefs.getString(getString(R.string.pref_location_key), getString(R.string.pref_location_default));
-            Uri locationUri = Uri.parse("geo:0,0?q=" + location);
-
-            Intent showLocationIntent = new Intent(Intent.ACTION_VIEW);
-            showLocationIntent.setData(locationUri);
-            startActivity(showLocationIntent);
+        } else if (id == R.id.action_map) {
+            showPreferredLocation();
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void showPreferredLocation() {
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        String location = sharedPrefs.getString(
+                getString(R.string.pref_location_key),
+                getString(R.string.pref_location_default));
+
+        Uri locationUri = Uri.parse("geo:0,0?").buildUpon()
+                .appendQueryParameter("q", location)
+                .build();
+
+        Intent showLocationIntent = new Intent(Intent.ACTION_VIEW);
+        showLocationIntent.setData(locationUri);
+
+        if (showLocationIntent.resolveActivity(getPackageManager()) != null) {
+            startActivity(showLocationIntent);
+        } else {
+            Log.d(LOG_TAG, "Couldn't call " + location + ", no app resolve its intent.");
+        }
     }
 }
