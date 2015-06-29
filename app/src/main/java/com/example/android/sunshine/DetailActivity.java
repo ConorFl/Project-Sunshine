@@ -16,25 +16,31 @@
 
 package com.example.android.sunshine;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.support.v7.widget.ShareActionProvider;
 import android.widget.TextView;
 
 public class DetailActivity extends ActionBarActivity {
 
     public static final String FORECAST = "forecast";
+    private ShareActionProvider mShareActionProvider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,7 +86,12 @@ public class DetailActivity extends ActionBarActivity {
      */
     public static class DetailsFragment extends Fragment {
 
+        private static final String LOG_TAG = DetailsFragment.class.getSimpleName();
+        private static final String FORECAST_SHARE_HASHTAG = "#SunshineApp";
+        private String forecast;
+
         public DetailsFragment() {
+            setHasOptionsMenu(true);
         }
 
         @Override
@@ -91,12 +102,37 @@ public class DetailActivity extends ActionBarActivity {
             Intent incomingIntent = getActivity().getIntent();
 
             if (incomingIntent != null && incomingIntent.hasExtra(Intent.EXTRA_TEXT)) {
-                String forecast = incomingIntent.getStringExtra(Intent.EXTRA_TEXT);
+                forecast = incomingIntent.getStringExtra(Intent.EXTRA_TEXT);
                 TextView textView = (TextView) rootView.findViewById(R.id.detail_text);
                 textView.setText(forecast);
             }
 
             return rootView;
+        }
+
+        @Override
+        public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+            inflater.inflate(R.menu.detailfragment, menu);
+
+            MenuItem item = menu.findItem(R.id.action_share);
+
+            ShareActionProvider shareActionProvider =
+                    (ShareActionProvider) MenuItemCompat.getActionProvider(item);
+
+            if (shareActionProvider != null) {
+                shareActionProvider.setShareIntent(createShareForecastIntent());
+            } else {
+                Log.e(LOG_TAG, "Share Action Provider is null?");
+            }
+        }
+
+        private Intent createShareForecastIntent() {
+            Intent shareIntent = new Intent(Intent.ACTION_SEND);
+            shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+            shareIntent.setType("text/plain");
+            shareIntent.putExtra(Intent.EXTRA_TEXT,
+                    forecast + " " + FORECAST_SHARE_HASHTAG);
+            return shareIntent;
         }
     }
 }
